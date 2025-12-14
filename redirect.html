@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>正在開啟內容...</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px 20px;
+            color: #333;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 30px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        .spinner {
+            border: 5px solid rgba(0, 0, 0, 0.1);
+            border-top: 5px solid #00B900; /* Line Green */
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="spinner"></div>
+    <h1>正在導向至預設瀏覽器...</h1>
+    <p>如果頁面沒有自動開啟，請點擊下方連結：</p>
+    <p id="fallbackLinkContainer">
+        </p>
+    <p><small>我們正在嘗試將您引導到系統預設瀏覽器 (如 Safari/Chrome) 開啟，以獲得最佳觀看體驗。</small></p>
+</div>
+
+<script>
+    // ** 1. 設定目標網址 **
+    // 將這個網址替換成您最終想要開啟的網址
+    const TARGET_URL = "https://online.fliphtml5.com/cpkzh/yacq/";
+
+    // 將目標網址插入到頁面中的備援連結
+    const fallbackLink = document.createElement('a');
+    fallbackLink.href = TARGET_URL;
+    fallbackLink.textContent = TARGET_URL;
+    document.getElementById('fallbackLinkContainer').appendChild(fallbackLink);
+
+
+    // ** 2. 核心導向邏輯 **
+
+    // A. 嘗試使用 window.open 實現外部跳轉
+    // 這在某些 Line 版本/系統上有機會強制跳出
+    const newWindow = window.open(TARGET_URL, '_blank');
+
+    // B. 如果 window.open 失敗（通常會回傳 null），或者被瀏覽器阻擋
+    // 則使用 location.href 作為備援，確保至少能在 Line 內建瀏覽器中載入目標網頁
+    if (!newWindow) {
+        // 使用延遲來給 window.open 留出反應時間
+        setTimeout(() => {
+            console.log("window.open 被阻擋或失敗，使用 location.href 備援。");
+            window.location.href = TARGET_URL;
+        }, 500); // 延遲 500 毫秒 (0.5 秒)
+    } else {
+        // 如果 window.open 成功，可能是跳出到外部瀏覽器了
+        // 我們可以嘗試關閉 Line 內建瀏覽器中的這個中介頁面（但通常會失敗，只適用於某些特定的 App）
+        // setTimeout(() => {
+        //     window.close();
+        // }, 1000);
+        console.log("嘗試透過 window.open 執行外部跳轉。");
+    }
+
+</script>
+</body>
+</html>
